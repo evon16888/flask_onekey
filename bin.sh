@@ -38,9 +38,6 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 EOF
 
-# 开放端口
-sudo ufw allow 5000
-
 
 # 创建wsgi
 cat << EOF > ~/myproject/wsgi.py
@@ -112,6 +109,5 @@ EOF
 
 sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
 sudo systemctl restart nginx
-sudo ufw delete allow 5000
 sudo ufw allow 'Nginx Full'
 echo "安装完成"
