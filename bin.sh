@@ -108,5 +108,6 @@ EOF
 sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
 sudo ufw allow 'Nginx Full'
 sudo systemctl restart nginx
-
+# 重启服务
+sudo systemctl restart myproject
 echo "安装完成"
