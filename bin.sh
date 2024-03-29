@@ -14,8 +14,7 @@ sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev p
 # 安装python虚拟环境
 sudo apt install python3-venv
 # 创建项目目录
-rm -rf myproject
-mkdir ~/myproject
+mkdir -p ~/myproject
 # 进入项目目录
 cd ~/myproject
 # 创建虚拟环境
