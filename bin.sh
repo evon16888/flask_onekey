@@ -13,6 +13,7 @@ sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev p
 # Step 2 — Creating a Python Virtual Environment
 # 安装python虚拟环境
 sudo apt install python3-venv
+sudo apt install nginx
 # 创建项目目录
 mkdir -p ~/myproject
 # 进入项目目录
@@ -91,7 +92,7 @@ sudo chgrp www-data /home/ubuntu
 sudo systemctl start myproject
 
 # ===============Step 6 — Configuring Nginx to Proxy Requests=========
-sudo apt install nginx
+
 
 echo "请输入域名"
 read your_domain
