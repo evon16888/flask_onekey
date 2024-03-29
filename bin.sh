@@ -66,6 +66,25 @@ vacuum = true
 die-on-term = true
 EOF
 
+# 创建服务
+sudo bash -c "cat >> /etc/systemd/system/myproject.service"  << EOF
+[Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/myproject
+Environment="PATH=/home/ubuntu/myproject/myprojectenv/bin"
+ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 启动服务
+sudo systemctl start myproject
 
 # 分配组
 sudo chgrp www-data /home/ubuntu
@@ -88,26 +107,5 @@ EOF
 sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
 sudo ufw allow 'Nginx Full'
 sudo systemctl restart nginx
-
-sudo su root
-# 创建服务
-cat << EOF > /etc/systemd/system/myproject.service
-[Unit]
-Description=uWSGI instance to serve myproject
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-WorkingDirectory=/home/ubuntu/myproject
-Environment="PATH=/home/ubuntu/myproject/myprojectenv/bin"
-ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# 启动服务
-sudo systemctl start myproject
 
 echo "安装完成"
