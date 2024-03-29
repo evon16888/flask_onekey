@@ -92,7 +92,8 @@ sudo chgrp www-data /home/ubuntu
 # ===============Step 6 — Configuring Nginx to Proxy Requests=========
 echo "请输入域名"
 read your_domain
-cat << EOF > /etc/nginx/sites-available/myproject
+
+sudo bash -c "cat >> /etc/nginx/sites-available/myproject"  << EOF
 server {
     listen 80;
     server_name $your_domain;
