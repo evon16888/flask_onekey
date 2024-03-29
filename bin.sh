@@ -68,8 +68,9 @@ vacuum = true
 die-on-term = true
 EOF
 
+sudo su root
 # 创建服务
-sudo cat << EOF > /etc/systemd/system/myproject.service
+cat << EOF > /etc/systemd/system/myproject.service
 [Unit]
 Description=uWSGI instance to serve myproject
 After=network.target
@@ -85,6 +86,8 @@ ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
 WantedBy=multi-user.target
 EOF
 
+# 切换用户
+sudo su ubuntu
 # 分配组
 sudo chgrp www-data /home/ubuntu
 # 启动服务
