@@ -66,6 +66,29 @@ vacuum = true
 die-on-term = true
 EOF
 
+
+# 分配组
+sudo chgrp www-data /home/ubuntu
+
+# ===============Step 6 — Configuring Nginx to Proxy Requests=========
+echo "请输入域名"
+read your_domain
+cat << EOF > /etc/nginx/sites-available/myproject
+server {
+    listen 80;
+    server_name $your_domain;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/ubuntu/myproject/myproject.sock;
+    }
+}
+EOF
+
+sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+sudo ufw allow 'Nginx Full'
+sudo systemctl restart nginx
+
 sudo su root
 # 创建服务
 cat << EOF > /etc/systemd/system/myproject.service
@@ -84,31 +107,7 @@ ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
 WantedBy=multi-user.target
 EOF
 
-# 切换用户
-sudo su ubuntu
-# 分配组
-sudo chgrp www-data /home/ubuntu
 # 启动服务
 sudo systemctl start myproject
 
-# ===============Step 6 — Configuring Nginx to Proxy Requests=========
-
-
-echo "请输入域名"
-read your_domain
-cat << EOF > /etc/nginx/sites-available/myproject
-server {
-    listen 80;
-    server_name $your_domain;
-
-    location / {
-        include uwsgi_params;
-        uwsgi_pass unix:/home/ubuntu/myproject/myproject.sock;
-    }
-}
-EOF
-
-sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
-sudo ufw allow 'Nginx Full'
-sudo systemctl restart nginx
 echo "安装完成"
