@@ -96,7 +96,7 @@ sudo systemctl start myproject
 
 echo "请输入域名"
 read your_domain
-sudo cat << EOF > /etc/nginx/sites-available/myproject
+cat << EOF > /etc/nginx/sites-available/myproject
 server {
     listen 80;
     server_name $your_domain;
@@ -109,6 +109,6 @@ server {
 EOF
 
 sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
-sudo systemctl restart nginx
 sudo ufw allow 'Nginx Full'
+sudo systemctl restart nginx
 echo "安装完成"
