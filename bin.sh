@@ -23,6 +23,7 @@ python3.10 -m venv myprojectenv
 source myprojectenv/bin/activate
 
 # Step 3 — Setting Up a Flask Application
+pip install wheel
 pip install uwsgi flask
 
 cat << EOF > ~/myproject/myproject.py
@@ -104,6 +105,7 @@ server {
         uwsgi_pass unix:/home/ubuntu/myproject/myproject.sock;
     }
 }
+EOF
 
 sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
 sudo systemctl restart nginx
