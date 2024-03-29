@@ -85,6 +85,8 @@ EOF
 
 # 启动服务
 sudo systemctl start myproject
+# 随机启动
+sudo systemctl enable myproject
 
 # 分配组
 sudo chgrp www-data /home/ubuntu
