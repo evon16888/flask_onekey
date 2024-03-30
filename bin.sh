@@ -85,7 +85,7 @@ EOF
 
 # 启动服务
 sudo systemctl start myproject
-# 随机启动
+# 开机自启动
 sudo systemctl enable myproject
 
 # 分配组
