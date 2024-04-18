@@ -39,7 +39,7 @@ EOF
 # 创建服务
 sudo bash -c "cat >> /etc/systemd/system/${project_name}.service"  << EOF
 [Unit]
-Description=uWSGI instance to serve myproject
+Description=uWSGI instance to serve ${project_name}
 After=network.target
 
 [Service]
