@@ -1,7 +1,7 @@
 echo "请输入项目名称，这个名称将当作创建的文件名，可以是字母、数字、下划线等"
 read project_name
 
-cat << EOF > ~/myproject/myproject.py
+cat << EOF > ~/myproject/$project_name.py
 from flask import Flask
 app = Flask(__name__)
 
@@ -13,6 +13,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 EOF
 
+# 以上测试通过
 
 # 创建wsgi
 cat << EOF > ~/myproject/wsgi.py
