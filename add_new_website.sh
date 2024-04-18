@@ -1,7 +1,7 @@
 echo "请输入项目名称，这个名称将当作创建的文件名，可以是字母、数字、下划线等"
-read project_name
+read -p "Enter the project name: " project_name
 
-cat << EOF > ~/myproject/$project_name.py
+cat << EOF > ~/myproject/${project_name}.py
 from flask import Flask
 app = Flask(__name__)
 
@@ -13,25 +13,23 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0')
 EOF
 
-# 以上测试通过
-
 # 创建wsgi
-cat << EOF > ~/myproject/wsgi.py
-from myproject import app
+cat << EOF > ~/myproject/${project_name}_wsgi.py
+from ${project_name} import app
 
 if __name__ == "__main__":
     app.run()
 EOF
 
 # 创建myproject.ini
-cat << EOF > ~/myproject/myproject.ini
+cat << EOF > ~/myproject/${project_name}.ini
 [uwsgi]
-module = wsgi:app
+module = ${project_name}_wsgi:app
 
 master = true
 processes = 5
 
-socket = myproject.sock
+socket = ${project_name}.sock
 chmod-socket = 660
 vacuum = true
 
@@ -39,7 +37,7 @@ die-on-term = true
 EOF
 
 # 创建服务
-sudo bash -c "cat >> /etc/systemd/system/myproject.service"  << EOF
+sudo bash -c "cat >> /etc/systemd/system/${project_name}.service"  << EOF
 [Unit]
 Description=uWSGI instance to serve myproject
 After=network.target
@@ -49,35 +47,35 @@ User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/myproject
 Environment="PATH=/home/ubuntu/myproject/myprojectenv/bin"
-ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
+ExecStart=/home/ubuntu/myproject/myprojectenv/bin/uwsgi --ini ${project_name}.ini
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # 启动服务
-sudo systemctl start myproject
+sudo systemctl start ${project_name}
 # 开机自启动
-sudo systemctl enable myproject
+sudo systemctl enable ${project_name}
 
 # ===============Step 6 — Configuring Nginx to Proxy Requests=========
 echo "请输入域名"
 read your_domain
 
-sudo bash -c "cat >> /etc/nginx/sites-available/myproject"  << EOF
+sudo bash -c "cat >> /etc/nginx/sites-available/${project_name}"  << EOF
 server {
     listen 80;
-    server_name $your_domain;
+    server_name ${your_domain};
 
     location / {
         include uwsgi_params;
-        uwsgi_pass unix:/home/ubuntu/myproject/myproject.sock;
+        uwsgi_pass unix:/home/ubuntu/myproject/${project_name}.sock;
     }
 }
 EOF
 
-sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/${project_name} /etc/nginx/sites-enabled
 sudo systemctl restart nginx
 # 重启服务
-sudo systemctl restart myproject
+sudo systemctl restart ${project_name}
 echo "安装完成"
